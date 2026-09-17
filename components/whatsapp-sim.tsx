@@ -16,6 +16,7 @@ import {
   buildStripeLink,
   formatPrice,
   type CartItem,
+  type PaymentMethod,
 } from "@/lib/menu";
 import { PhoneFrame, StatusBar, ChatHeader, ChatInput } from "@/components/phone";
 import {
@@ -29,6 +30,7 @@ type WhatsAppSimProps = {
   items: CartItem[];
   name: string;
   total: number;
+  paymentMethod: PaymentMethod;
   onBack: () => void;
 };
 
@@ -36,6 +38,7 @@ export default function WhatsAppSim({
   items,
   name,
   total,
+  paymentMethod,
   onBack,
 }: WhatsAppSimProps) {
   const [orderSent, setOrderSent] = useState(false);
@@ -85,14 +88,16 @@ export default function WhatsAppSim({
   };
 
   const hint = !orderSent
-    ? "📲 Le client envoie sa commande + le lien…"
+    ? "📲 Le client envoie sa commande…"
     : !confirmed
       ? "🔗 Le gérant lit la commande…"
-      : !paying && !paid
-        ? "👉 Le client : appuie sur le lien de paiement"
-        : paying
-          ? "💳 Le client règle par carte…"
-          : "✅ Paiement confirmé ! Commande en préparation.";
+      : paymentMethod === "cash"
+        ? "✅ Commande confirmée — paiement en espèces à la réception 🌴"
+        : !paying && !paid
+          ? "👉 Le client : appuie sur le lien de paiement"
+          : paying
+            ? "💳 Le client règle par carte…"
+            : "✅ Paiement confirmé ! Commande en préparation.";
 
   return (
     <div className="relative flex min-h-screen flex-col items-center bg-gradient-to-b from-emerald-900 via-emerald-800 to-teal-900 px-4 py-6 text-white">
@@ -116,7 +121,10 @@ export default function WhatsAppSim({
 
       <div className="relative z-10 flex w-full flex-col items-center justify-center gap-8 lg:flex-row lg:items-start lg:gap-10">
         {/* Client phone */}
-        <PhoneColumn label="👤 Client" active={confirmed && !paid}>
+        <PhoneColumn
+          label="👤 Client"
+          active={paymentMethod === "card" && confirmed && !paid}
+        >
           <PhoneFrame>
             <StatusBar />
             <ChatHeader
@@ -143,7 +151,8 @@ export default function WhatsAppSim({
                     total={total}
                     name={clientName}
                     link={stripeLink}
-                    onOpen={openLink}
+                    method={paymentMethod}
+                    onOpen={paymentMethod === "card" ? openLink : undefined}
                   />
                 </ChatBubble>
               )}
@@ -152,7 +161,10 @@ export default function WhatsAppSim({
 
               {confirmed && (
                 <ChatBubble side="in" time="14:35">
-                  <ConfirmationMessage name={clientName} />
+                  <ConfirmationMessage
+                    name={clientName}
+                    method={paymentMethod}
+                  />
                 </ChatBubble>
               )}
 
@@ -210,13 +222,17 @@ export default function WhatsAppSim({
                     total={total}
                     name={clientName}
                     link={stripeLink}
+                    method={paymentMethod}
                   />
                 </ChatBubble>
               )}
 
               {confirmed && (
                 <ChatBubble side="out" time="14:35" read>
-                  <ConfirmationMessage name={clientName} />
+                  <ConfirmationMessage
+                    name={clientName}
+                    method={paymentMethod}
+                  />
                 </ChatBubble>
               )}
 
@@ -347,12 +363,14 @@ function ClientOrderMessage({
   total,
   name,
   link,
+  method,
   onOpen,
 }: {
   items: CartItem[];
   total: number;
   name: string;
   link: string;
+  method: PaymentMethod;
   onOpen?: () => void;
 }) {
   return (
@@ -375,34 +393,56 @@ function ClientOrderMessage({
         <p className="mt-1 text-sm text-zinc-700">👤 {name}</p>
       </div>
       <div className="mt-2 rounded-lg bg-black/5 px-2.5 py-2">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
-          🔗 Lien de paiement
-        </p>
-        {onOpen ? (
-          <button
-            onClick={onOpen}
-            className="mt-0.5 break-all text-left font-mono text-[10px] leading-snug text-sky-700 underline decoration-sky-400 underline-offset-2"
-          >
-            {link}
-          </button>
+        {method === "card" ? (
+          <>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+              🔗 Lien de paiement
+            </p>
+            {onOpen ? (
+              <button
+                onClick={onOpen}
+                className="mt-0.5 break-all text-left font-mono text-[10px] leading-snug text-sky-700 underline decoration-sky-400 underline-offset-2"
+              >
+                {link}
+              </button>
+            ) : (
+              <p className="mt-0.5 break-all font-mono text-[10px] leading-snug text-sky-700">
+                {link}
+              </p>
+            )}
+            <p className="mt-1.5 text-[11px] leading-snug text-zinc-500">
+              💡 Réglez uniquement après confirmation du restaurant.
+            </p>
+          </>
         ) : (
-          <p className="mt-0.5 break-all font-mono text-[10px] leading-snug text-sky-700">
-            {link}
-          </p>
+          <>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+              💵 Paiement en espèces
+            </p>
+            <p className="mt-0.5 text-[11px] leading-snug text-zinc-500">
+              À la réception de la commande.
+            </p>
+          </>
         )}
-        <p className="mt-1.5 text-[11px] leading-snug text-zinc-500">
-          💡 Réglez uniquement après confirmation du restaurant.
-        </p>
       </div>
     </div>
   );
 }
 
-function ConfirmationMessage({ name }: { name: string }) {
+function ConfirmationMessage({
+  name,
+  method,
+}: {
+  name: string;
+  method: PaymentMethod;
+}) {
   return (
     <p className="text-sm leading-snug text-zinc-700">
-      Bonjour {name} ! Commande acceptée ✅ Vous pouvez initier le paiement via
-      le lien de votre message précédent 🌴
+      Bonjour {name} ! Commande acceptée ✅{" "}
+      {method === "card"
+        ? "Vous pouvez initier le paiement via le lien de votre message précédent 🌴"
+        : "Payez en espèces à la réception 🌴"}{" "}
+      Mèsi !
     </p>
   );
 }

@@ -4,12 +4,13 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Storefront from "@/components/storefront";
 import WhatsAppSim from "@/components/whatsapp-sim";
-import { cartTotal, type CartItem, type Product } from "@/lib/menu";
+import { cartTotal, type CartItem, type PaymentMethod, type Product } from "@/lib/menu";
 
 export default function DemoApp() {
   const [view, setView] = useState<"store" | "whatsapp">("store");
   const [items, setItems] = useState<CartItem[]>([]);
   const [name, setName] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
 
   const total = cartTotal(items);
 
@@ -48,6 +49,7 @@ export default function DemoApp() {
     setView("store");
     setItems([]);
     setName("");
+    setPaymentMethod("card");
   };
 
   return (
@@ -68,6 +70,8 @@ export default function DemoApp() {
               onDecrement={decrement}
               onRemove={remove}
               onOrder={order}
+              paymentMethod={paymentMethod}
+              onPaymentMethod={setPaymentMethod}
             />
           </motion.div>
         ) : (
@@ -82,6 +86,7 @@ export default function DemoApp() {
               items={items}
               name={name}
               total={total}
+              paymentMethod={paymentMethod}
               onBack={back}
             />
           </motion.div>

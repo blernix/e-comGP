@@ -13,6 +13,8 @@ import {
   MapPin,
   Clock,
   Flame,
+  Banknote,
+  CreditCard,
 } from "lucide-react";
 import {
   MENU,
@@ -22,6 +24,7 @@ import {
   cartCount,
   type Product,
   type CartItem,
+  type PaymentMethod,
 } from "@/lib/menu";
 import { WhatsAppIcon } from "@/components/icons";
 
@@ -32,6 +35,8 @@ type StorefrontProps = {
   onDecrement: (productId: string) => void;
   onRemove: (productId: string) => void;
   onOrder: (name: string) => void;
+  paymentMethod: PaymentMethod;
+  onPaymentMethod: (method: PaymentMethod) => void;
 };
 
 export default function Storefront({
@@ -41,6 +46,8 @@ export default function Storefront({
   onDecrement,
   onRemove,
   onOrder,
+  paymentMethod,
+  onPaymentMethod,
 }: StorefrontProps) {
   const [cartOpen, setCartOpen] = useState(false);
   const total = cartTotal(items);
@@ -92,6 +99,9 @@ export default function Storefront({
       <section className="mx-auto max-w-3xl px-4 pt-6">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-600 px-6 py-8 text-white shadow-lg shadow-emerald-900/10">
           <div className="relative z-10">
+            <p className="mb-2 text-sm font-semibold text-amber-200">
+              🇬🇵 Bonjou ! An nou manjé 🌴
+            </p>
             <div className="mb-3 inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
               <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
               {RESTAURANT.rating} · {RESTAURANT.reviews} avis
@@ -101,7 +111,7 @@ export default function Storefront({
             </h1>
             <p className="mt-2 flex items-center gap-2 text-sm text-emerald-50/90">
               <Clock className="h-4 w-4" />
-              Commandez & payez par carte, tout arrive sur WhatsApp.
+              Payez par carte ou en espèces — tout arrive sur WhatsApp.
             </p>
           </div>
           <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-amber-400/30 blur-2xl" />
@@ -112,7 +122,10 @@ export default function Storefront({
       {/* Catalogue */}
       <main className="mx-auto max-w-3xl px-4 pb-36 pt-8">
         <div className="mb-4 flex items-end justify-between">
-          <h2 className="text-xl font-bold tracking-tight">Notre carte</h2>
+          <div>
+            <h2 className="text-xl font-bold tracking-tight">Kaz a manjé</h2>
+            <p className="text-xs text-zinc-500">An nou manjé !</p>
+          </div>
           <span className="text-sm text-zinc-500">
             {MENU.length} plats maison
           </span>
@@ -184,6 +197,8 @@ export default function Storefront({
         onDecrement={onDecrement}
         onRemove={onRemove}
         onOrder={onOrder}
+        paymentMethod={paymentMethod}
+        onPaymentMethod={onPaymentMethod}
       />
     </div>
   );
@@ -280,6 +295,8 @@ function CartDrawer({
   onDecrement,
   onRemove,
   onOrder,
+  paymentMethod,
+  onPaymentMethod,
 }: {
   open: boolean;
   items: CartItem[];
@@ -289,6 +306,8 @@ function CartDrawer({
   onDecrement: (id: string) => void;
   onRemove: (id: string) => void;
   onOrder: (name: string) => void;
+  paymentMethod: PaymentMethod;
+  onPaymentMethod: (method: PaymentMethod) => void;
 }) {
   const [name, setName] = useState("");
 
@@ -327,7 +346,7 @@ function CartDrawer({
               <div className="no-scrollbar flex-1 overflow-y-auto px-5">
                 {items.length === 0 ? (
                   <p className="py-10 text-center text-sm text-zinc-400">
-                    Votre panier est vide.
+                    Pa ni anyen an panyen-la 🧺
                   </p>
                 ) : (
                   <ul className="space-y-3">
@@ -398,6 +417,35 @@ function CartDrawer({
                     <span className="text-xl font-extrabold">
                       {formatPrice(total)}
                     </span>
+                  </div>
+                  <div className="space-y-1.5 rounded-2xl border border-black/10 bg-zinc-50 p-1.5">
+                    <p className="px-2 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+                      Mode de paiement
+                    </p>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <button
+                        onClick={() => onPaymentMethod("card")}
+                        className={`flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
+                          paymentMethod === "card"
+                            ? "bg-white text-emerald-700 shadow-sm ring-1 ring-black/5"
+                            : "text-zinc-500 hover:text-zinc-700"
+                        }`}
+                      >
+                        <CreditCard className="h-4 w-4" />
+                        Carte
+                      </button>
+                      <button
+                        onClick={() => onPaymentMethod("cash")}
+                        className={`flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-bold transition ${
+                          paymentMethod === "cash"
+                            ? "bg-white text-emerald-700 shadow-sm ring-1 ring-black/5"
+                            : "text-zinc-500 hover:text-zinc-700"
+                        }`}
+                      >
+                        <Banknote className="h-4 w-4" />
+                        Espèces
+                      </button>
+                    </div>
                   </div>
                   <input
                     value={name}

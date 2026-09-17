@@ -12,6 +12,8 @@ export type CartItem = {
   qty: number;
 };
 
+export type PaymentMethod = "card" | "cash";
+
 export const RESTAURANT = {
   name: "O'Boucané",
   subtitle: "Resto Pays",
