@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -15,6 +16,7 @@ import {
   Flame,
   Banknote,
   CreditCard,
+  Navigation,
 } from "lucide-react";
 import {
   MENU,
@@ -61,9 +63,13 @@ export default function Storefront({
       {/* Header */}
       <header className="sticky top-0 z-30 border-b border-black/5 bg-cream/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-amber-500 text-white shadow-md shadow-emerald-600/20">
+          <Link
+            href="/"
+            aria-label="Retour à l'accueil"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-amber-500 text-white shadow-md shadow-emerald-600/20 transition hover:brightness-105"
+          >
             <Flame className="h-6 w-6" />
-          </div>
+          </Link>
           <div className="min-w-0 flex-1">
             <p className="truncate text-lg font-bold leading-tight tracking-tight">
               {RESTAURANT.name}
@@ -116,6 +122,33 @@ export default function Storefront({
           </div>
           <div className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-amber-400/30 blur-2xl" />
           <div className="pointer-events-none absolute -bottom-10 -left-6 h-40 w-40 rounded-full bg-teal-300/20 blur-2xl" />
+        </div>
+
+        {/* Localisation */}
+        <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
+              <MapPin className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold">
+                {RESTAURANT.address}
+              </p>
+              <p className="text-xs text-zinc-500">
+                Ouvert aujourd&apos;hui · {RESTAURANT.opensAt}–
+                {RESTAURANT.closesAt}
+              </p>
+            </div>
+          </div>
+          <a
+            href={RESTAURANT.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex shrink-0 items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-emerald-700 active:scale-95"
+          >
+            <Navigation className="h-4 w-4" />
+            S&apos;y rendre
+          </a>
         </div>
       </section>
 

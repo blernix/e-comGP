@@ -1,0 +1,113 @@
+PROJET — Mini-SaaS "Site Web + WhatsApp" pour la Guadeloupe
+==========================================================
+
+VISION
+------
+Digitaliser les petits commerçants/restaurants de Guadeloupe en leur offrant
+un mini-site e-commerce dont les commandes arrivent directement sur leur
+WhatsApp, avec paiement par carte (Stripe) ou en espèces.
+
+Le commerçant gère tout depuis son téléphone, sans back-office complexe.
+
+MODELE ECONOMIQUE
+-----------------
+- AUCUNE commission prise sur les ventes (seulement les frais Stripe).
+- Phase test : vendre la mise en place a 2-3 commercants (~600e max).
+- Si ca marche : plateforme par ABONNEMENT, toujours sans commission.
+- Onboarding "concierge" : le commerçant passe obligatoirement par moi
+  pour creer son compte (pas de self-service).
+
+ETAT ACTUEL
+-----------
+Demo interactive / POC (Next.js App Router + Tailwind + Framer Motion +
+Lucide), export statique, 100% mock data (aucun backend).
+
+Contenu de la demo :
+- Mini-site "O'Boucané - Resto Pays" (catalogue, panier, choix carte/especes).
+- Simulation 2 telephones (client + restaurateur) avec animation WhatsApp.
+- Page Stripe simulee (CB + Apple Pay + Google Pay + PayPal).
+- Touches creole (Bonjou, Kaz a manje, Mèsi, etc.).
+- Scripts analytiques + enregistreur de session dans app/layout.tsx.
+
+ARCHITECTURE CIBLE
+------------------
+1) BACK CENTRAL (mini-SaaS, cote moi) :
+   - Interface admin simple (juste pour moi) : login, creer les commercants.
+   - Creation des comptes via STRIPE CONNECT (onboarding heberge).
+   - Stocker par commerçant : numero WhatsApp, URL du site, jetons.
+   - API publique : {jeton, panier} -> cree la session Stripe -> renvoie l'URL.
+   - Webhook Stripe (notifications de paiement).
+   - PAS de commission (aucun application_fee).
+
+2) SITES CLIENTS (un par commerçant) :
+   - Next.js + SANITY (CMS) pour le contenu (plats, prix, dispo, photos).
+   - Le commerçant edite son contenu via Sanity sans passer par moi.
+   - Le site appelle le BACK CENTRAL pour le paiement (jeton scope).
+   - Construit le lien wa.me (panier + lien de paiement + numéro commerçant).
+
+FLUX DE COMMANDE REEL
+---------------------
+1. Client remplit son panier sur le site du commerçant.
+2. Le site appelle le back central avec son jeton.
+3. Le back cree une Checkout Session Stripe (destination = compte connecte
+   du commerçant, montant total, sans commission).
+4. Le back renvoie l'URL de paiement.
+5. Le site construit le message wa.me : recap de commande + URL + note.
+6. Le client envoie le message sur WhatsApp du commerçant.
+7. Le commerçant confirme manuellement (accepte la commande).
+8. Le client paie via le lien (navigateur, pas de popup).
+9. Stripe -> webhook -> back central -> notification (moi + commerçant).
+
+Option "especes" : pas de lien, paiement a la reception.
+
+STRIPE CONNECT (points cles)
+----------------------------
+- Compte plateforme = le mien (verif KYC comme un compte normal).
+- Comptes connectes = type "Standard" avec onboarding heberge Stripe.
+- Reglementation francaise : impossible de creer les comptes a la main,
+  obligation de passer par un lien d'onboarding (Account Link).
+- 2 appels API : POST /v1/accounts puis POST /v1/account_links.
+- Lien a envoyer au commerçant : il renseigne activite, identite, IBAN, SIRET.
+- Suivre l'activation via webhook account.updated (charges_enabled = true).
+- Paiement : charge directe (transfer_data.destination = acct du commerçant).
+- L'argent va directement du client au compte bancaire du commerçant.
+- Moi je ne recois que l'abonnement (facture a part), pas les fonds des ventes.
+
+JETONS (SECURITE)
+-----------------
+- Les sites clients sont des exports statiques (ou avec Sanity en ISR/SSG),
+  donc tout ce qui y est inliné est PUBLIC dans le navigateur.
+- Le jeton est donc une cle "publique scope" (type pk_live de Stripe) :
+  - ne permet QUE de creer une commande pour CE commerçant,
+  - pas d'acces admin ni aux autres commercants,
+  - pouvoir etre regenere/revoque depuis l'admin.
+- La cle secrete Stripe reste UNIQUEMENT dans le back central.
+
+WHATSAPP (MVP sans API)
+-----------------------
+- Pas besoin de WhatsApp Business API (payante) pour le MVP.
+- Le commerçant installe l'app gratuite WhatsApp Business (profil pro).
+- Le lien wa.me fonctionne avec un numero normal (+590...).
+- L'automatisation (boutons, envoi auto) viendra plus tard avec la Cloud API.
+
+SANITY
+------
+- Gere le CONTENU uniquement (plats, prix, disponibilites, photos).
+- NE gere PAS le paiement (c'est le back central qui s'en charge).
+- Plan gratuit largement suffisant pour 2-3 clients.
+
+CE QUE DOIT FOURNIR CHAQUE COMMERCANT
+-------------------------------------
+- Informations du site : nom, logo, photos, menu + prix, horaires, adresse.
+- Numero WhatsApp en format international (+590 6xx...).
+- Stripe Connect : remplir le lien d'onboarding (identite + IBAN + SIRET).
+- Preferences : sur place / a emporter / livraison, paiement carte/especes.
+
+A FAIRE (BACKLOG)
+-----------------
+[ ] Squelette du back central (admin + commercants + jetons + route paiement).
+[ ] Webhook Stripe (compte.updated + paiement reussi).
+[ ] Generation du lien d'onboarding Connect depuis l'admin.
+[ ] Connecter un site client reel (Next.js + Sanity) au back.
+[ ] Remplacer le mock de la demo par de vraies donnees.
+[ ] Mentions legales / CGV / consentement RGPD (surtout l'enregistreur de session).

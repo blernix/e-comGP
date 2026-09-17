@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "O'Boucané — Resto Pays · Démo",
+  title: "Boutik & WhatsApp — Commerce en ligne pour la Guadeloupe",
   description:
-    "Démo interactive : mini-site e-commerce couplé à WhatsApp pour la Guadeloupe.",
+    "Un mini-site avec votre catalogue, des commandes sur WhatsApp et le paiement par carte, sans back-office.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -24,7 +24,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        {children}
+        <script
+          defer
+          src="https://analytique.killian-lecrut.com/script.js"
+          data-website-id="9fb7ca97-b4b5-4da6-8c62-e684fc4704c1"
+        />
+        <script
+          defer
+          src="https://analytique.killian-lecrut.com/recorder.js"
+          data-website-id="9fb7ca97-b4b5-4da6-8c62-e684fc4704c1"
+          data-sample-rate="1"
+          data-mask-level="moderate"
+          data-max-duration="300000"
+        />
+      </body>
     </html>
   );
 }

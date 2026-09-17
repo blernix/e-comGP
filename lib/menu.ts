@@ -19,6 +19,9 @@ export const RESTAURANT = {
   subtitle: "Resto Pays",
   tagline: "Les saveurs de la Guadeloupe, commandées sur WhatsApp.",
   city: "Pointe-à-Pitre, Guadeloupe",
+  address: "Rue Frébault, 97110 Pointe-à-Pitre, Guadeloupe",
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Rue+Fr%C3%A9bault+Pointe-%C3%A0-Pitre+Guadeloupe",
   phone: "+590 690 12 34 56",
   open: true,
   opensAt: "11h30",
