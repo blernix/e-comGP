@@ -35,7 +35,7 @@ import {
   SearchDemo,
 } from "@/components/landing-animations";
 
-const CONTACT_WHATSAPP = "https://wa.me/33691244857";
+const CONTACT_WHATSAPP = "https://wa.me/590691244857";
 const CONTACT_EMAIL = "mailto:killian.lecrut@gmail.com";
 
 const METIERS = [

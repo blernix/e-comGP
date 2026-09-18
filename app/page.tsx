@@ -37,7 +37,7 @@ const jsonLd = {
   ],
   priceRange: "€€",
   email: "killian.lecrut@gmail.com",
-  telephone: "+33691244857",
+  telephone: "+590691244857",
 };
 
 export default function Home() {
