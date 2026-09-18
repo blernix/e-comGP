@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -562,9 +563,15 @@ function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/5 bg-emerald-900/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 text-white">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-wa text-white">
-            <WhatsAppIcon className="h-5 w-5" />
+        <Link href="/" className="flex items-center gap-2.5 text-white">
+          <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl">
+            <Image
+              src="/logo-background.png"
+              alt="Ti-Boutik"
+              width={36}
+              height={36}
+              className="h-full w-full object-contain"
+            />
           </span>
           <span className="text-base font-bold tracking-tight">
             Ti-Boutik

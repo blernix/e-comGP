@@ -30,6 +30,11 @@ export const metadata: Metadata = {
   keywords: SITE_KEYWORDS,
   creator: SITE_NAME,
   authors: [{ name: SITE_NAME }],
+  icons: {
+    icon: "/favicon-32x32.png",
+    shortcut: "/favicon-32x32.png",
+    apple: "/favicon-32x32.png",
+  },
   openGraph: {
     type: "website",
     locale: "fr_FR",
@@ -37,11 +42,20 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/logo-ti-boutik.jpeg",
+        width: 1069,
+        height: 1008,
+        alt: SITE_NAME,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
+    images: ["/logo-ti-boutik.jpeg"],
   },
   robots: {
     index: true,
