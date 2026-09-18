@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Mentions légales — KIKIDEV",
-  description: "Mentions légales du site killian-lecrut.com, édité par KIKIDEV.",
+  title: "Mentions légales",
+  description:
+    "Mentions légales du site ti-boutik.fr, édité par KIKIDEV.",
+  alternates: {
+    canonical: "/mentions-legales",
+  },
 };
 
 export default function MentionsLegales() {
@@ -26,7 +30,7 @@ export default function MentionsLegales() {
               Éditeur du site
             </h2>
             <p className="mt-3 text-zinc-700">
-              Le site <strong>killian-lecrut.com</strong> est édité par :
+              Le site <strong>ti-boutik.fr</strong> est édité par :
             </p>
             <ul className="mt-3 space-y-1.5 text-zinc-700">
               <li>

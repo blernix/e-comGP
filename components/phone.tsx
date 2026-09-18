@@ -5,9 +5,11 @@ import { Battery, Mic, Paperclip, Signal, Video, Wifi, Phone, MoreVertical, Chev
 export function PhoneFrame({
   children,
   className,
+  heightClassName = "h-[min(72vh,700px)]",
 }: {
   children: React.ReactNode;
   className?: string;
+  heightClassName?: string;
 }) {
   return (
     <div className={`relative w-full ${className ?? ""}`}>
@@ -16,7 +18,7 @@ export function PhoneFrame({
       <div className="absolute -right-1 top-36 h-16 w-1 rounded-r-md bg-zinc-700" />
 
       <div className="rounded-[2.9rem] bg-zinc-900 p-2.5 shadow-2xl shadow-black/40 ring-1 ring-white/10">
-        <div className="relative flex h-[min(72vh,700px)] flex-col overflow-hidden rounded-[2.4rem] bg-white">
+        <div className={`relative flex ${heightClassName} flex-col overflow-hidden rounded-[2.4rem] bg-white text-foreground`}>
           <div className="absolute left-1/2 top-2 z-20 h-6 w-24 -translate-x-1/2 rounded-full bg-zinc-900" />
           {children}
         </div>
