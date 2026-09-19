@@ -114,16 +114,18 @@ export default function Landing() {
         <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
           <div className="text-center lg:text-left">
             <FadeIn>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-amber-200 backdrop-blur">
-                🇬🇵 Pensé pour la Guadeloupe &amp; les Antilles
-              </span>
-            </FadeIn>
-            <FadeIn delay={0.05}>
-              <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+              <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
                 Votre site web à vous,
                 <br className="hidden sm:block" /> vos commandes{" "}
                 <span className="text-wa">sur WhatsApp</span>.
               </h1>
+            </FadeIn>
+            <FadeIn delay={0.05}>
+              <div className="mt-5">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-amber-200 backdrop-blur">
+                  Pensé pour la Guadeloupe &amp; les Antilles
+                </span>
+              </div>
             </FadeIn>
             <FadeIn delay={0.1}>
               <p className="mx-auto mt-5 max-w-xl text-lg text-emerald-50/90 lg:mx-0">
@@ -169,7 +171,7 @@ export default function Landing() {
           <p className="mx-auto mt-3 max-w-2xl text-center text-zinc-600">
             Vos clients habituels vous écrivent déjà sur WhatsApp, et
             c&apos;est très bien. Mais ceux qui ne vous connaissent pas
-            cherchent sur Google — et ils vont voir ailleurs.
+            cherchent sur Google.
           </p>
         </FadeIn>
         <div className="mt-10 grid gap-5 md:grid-cols-2">
@@ -326,7 +328,7 @@ export default function Landing() {
         <FadeIn>
           <div className="mt-12 rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 p-6 text-white sm:p-10">
             <h3 className="text-center text-xl font-bold">
-              Le parcours de vos clients
+              Le parcours client
             </h3>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               <ClientStep
